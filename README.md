@@ -30,6 +30,11 @@ Described implementation of hardware interrupt on pin state change using attachI
 Not used in this solution as need to implement debouncing functionality. Have not found any way to implement this programically (maybe be need to think or google more about approaches).
 Hardware debouncing could increased complexity and cost, as well not confidence that this will work as designed. One more blocker no way to easily tune debounce duration.
 
+### ESP32 Timer interrupts
+[ESP32 Arduino: Timer interrupts](https://techtutorialsx.com/2017/10/07/esp32-arduino-timer-interrupts/)
+[Timer Interrupts with ESP32](https://iotespresso.com/timer-interrupts-with-esp32/)
+[Timer Interrupts Explained with Examples](https://www.visualmicro.com/page/Timer-Interrupts-Explained.aspx)
+[Espressif Doc: ESP32: Timer](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/timer.html)
 [ESP32TimerInterrupt Library](https://github.com/khoih-prog/ESP32TimerInterrupt)
 
 Permamnent Store Configuration
