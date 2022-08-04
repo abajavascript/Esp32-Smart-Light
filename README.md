@@ -15,9 +15,9 @@ To dynamically configure WiFi used [Wi-Fi Manager Library](https://github.com/tz
 For storing device configuration permanently in device used [Preferences Library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/preferences.html).
 [GiHub](https://github.com/vshymanskyy/Preferences)
 
+### JSON Library
+For device configuration: Butoon PIN numbers, Relay PIN Numbers, Relay groups, Button Actions etc used JSON format. At first considered to use [ArduinoJSON library](https://arduinojson.org/). However, for JSON manipulation, to parse or deserialize complex or nested JSON objects and arrays selected [FirebaseJson library](https://github.com/mobizt/FirebaseJson), as it is a part of already used [Firebase ESP32](https://github.com/mobizt/Firebase-ESP32) library.
 
-For JSON manipulation, to parse or deserialize complex or nested JSON objects and arrays used FirebaseJson library. Library was set as part of Firebase ESP32 Client library.
-[GiHub](https://github.com/mobizt/FirebaseJson)
 
 Arduino Timezone Library
 https://github.com/JChristensen/Timezone
@@ -30,10 +30,12 @@ Described implementation of hardware interrupt on pin state change using attachI
 Not used in this solution as need to implement debouncing functionality. Have not found any way to implement this programically (maybe be need to think or google more about approaches).
 Hardware debouncing could increased complexity and cost, as well not confidence that this will work as designed. One more blocker no way to easily tune debounce duration.
 
+[ESP32TimerInterrupt Library](https://github.com/khoih-prog/ESP32TimerInterrupt)
+
 Permamnent Store Configuration
 [Install ESP32 Filesystem Uploader in Arduino IDE](https://randomnerdtutorials.com/install-esp32-filesystem-uploader-arduino-ide/)
 [Configuring & Handling ESP32 GPIO Interrupts In Arduino IDE](https://lastminuteengineers.com/handling-esp32-gpio-interrupts-tutorial/)
-[ESP32:Примеры/SPIFFS платы ESP32 (файловая система памяти SPI Flash)](https://wikihandbk.com/wiki/ESP32:%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B/SPIFFS_%D0%BF%D0%BB%D0%B0%D1%82%D1%8B_ESP32_(%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D0%B8_SPI_Flash))
+[ESP32:ГЏГ°ГЁГ¬ГҐГ°Г»/SPIFFS ГЇГ«Г ГІГ» ESP32 (ГґГ Г©Г«Г®ГўГ Гї Г±ГЁГ±ГІГҐГ¬Г  ГЇГ Г¬ГїГІГЁ SPI Flash)](https://wikihandbk.com/wiki/ESP32:%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B/SPIFFS_%D0%BF%D0%BB%D0%B0%D1%82%D1%8B_ESP32_(%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D0%B8_SPI_Flash))
 
 FreeRTOS
 Not investigated deeply as at first glance looked too complex for such device.
