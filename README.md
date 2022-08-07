@@ -20,6 +20,9 @@ Solution is implemented on [ESP-WROOM-32 38 PIN Develeopment Board PINOUT](https
 ![PIN-OUT](https://raw.githubusercontent.com/AchimPieters/esp32-homekit-camera/master/Images/ESP32-38%20PIN-DEVBOARD.png)	
 
 #### Device
+![Photo 01](https://github.com/abajavascript/Esp32-Smart-Light/blob/main/pic/Device-01.jpg)
+![Photo 02](https://github.com/abajavascript/Esp32-Smart-Light/blob/main/pic/Device-02.jpg)
+![Photo 02](https://github.com/abajavascript/Esp32-Smart-Light/blob/main/pic/Device-02.jpg)
 
 
 ## Used references
