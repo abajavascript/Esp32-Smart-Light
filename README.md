@@ -2,7 +2,9 @@
 # Esp32-Smart-Light
 ## Smart Light Control
 
-This device for created as alternative for solutions based on bi-stable relays to control light in house with posibility to control light remotely and some features that exist in SONOFF BASIC devices.
+This device was created as alternative to solutions based on bi-stable relays to control light in house with multiple points of controls and multiple light sources. It has posibility to control light remotely through intenet and has implemented some features like scheduling that exist in SONOFF BASIC devices. Described device implementation has 8 press buttons to control 8 relays with configurable scenarios.
+
+
  
 Solution is implemented on [ESP-WROOM-32 38 PIN Develeopment Board PINOUT](https://www.studiopieters.nl/esp32-pinout/). 38 pin  edition was selected to maximize number of PIN. Minimal requirement was to have at least 8 buttons and 8 relays.
 ![PIN-OUT](https://raw.githubusercontent.com/AchimPieters/esp32-homekit-camera/master/Images/ESP32-38%20PIN-DEVBOARD.png)	
