@@ -3,30 +3,31 @@
 #include "ADeviceHWConfig.h"
 #include <GyverButton.h>
 
-enum clickType {NO_CLICK, SHORT_CLICK, LONG_CLICK, LONGLONG_CLICK};
-enum relayGroupAction {RG_NO_ACTION, RG_ALL_ON, RG_ALL_OFF, RG_INVERT, RG_NEXT_COMBINATION, RG_ON_OR_INVERT, RG_OFF_OR_INVERT};
+enum AButtonClickType {NO_CLICK, SHORT_CLICK, LONG_CLICK, LONGLONG_CLICK};
+enum ARelayGroupAction {RG_NO_ACTION, RG_ALL_ON, RG_ALL_OFF, RG_INVERT, RG_NEXT_COMBINATION, RG_ON_OR_INVERT, RG_OFF_OR_INVERT};
 
+/*Structure describes what action to perform on specific Relay Group based on click type (duration) */
 typedef struct {
-  clickType click;
-  byte relayGroupIndex;
-  relayGroupAction rgAction; 
-} BTNAction;
+    AButtonClickType click;
+    byte relayGroupIndex;
+    ARelayGroupAction relayGroupAction; 
+} AButtonAction;
   
 class AButton  {
 private:
     GButton * _button = NULL;
-    clickType _click;
+    AButtonClickType _click;
     int _actionsLength;    
-    BTNAction _actions[MAX_BUTTON_ACTIONS_CNT];
+    AButtonAction _actions[MAX_BUTTON_ACTIONS_CNT];
+    void setClick(AButtonClickType button_click_type);
 public:
     AButton(uint8_t pin);
     ~AButton();
-    GButton * btn();
-    clickType click();
-    void setClick(clickType ct);
-    boolean addButtonAction(int btn_click_type, int relay_group_idx, int relay_action);
+    GButton * button();
+    AButtonClickType click();
+    boolean addButtonAction(AButtonClickType button_click_type, int relay_group_index, ARelayGroupAction relay_group_action);
     int getButtonActionsLength();    
-    BTNAction * getAction(int action_idx);
+    AButtonAction * getAction(int action_index);
 };
 
 class AButtonArr {
@@ -35,23 +36,24 @@ private:
     int _length;
 public:
     AButtonArr();
-    void add(uint8_t pin);
-    void del(byte index = -1);
+    ~AButtonArr();
+    boolean add(uint8_t pin);
+    boolean del(byte index = -1);
     void clear(void);
     int getLength(void);
 
-    clickType isClicked(byte index = -1);
+    AButtonClickType isClicked(byte index = -1);
 
     void tick(int index);
-    boolean isClick(byte index = -1);
-    boolean isPress(byte index = -1);
-    boolean isRelease(byte index = -1);
-    boolean isStep(byte index = -1);
-    boolean isHolded(byte index = -1);
-    boolean addButtonAction(int btn_idx, int btn_click_type, int relay_group_idx, int relay_action);
-    int getButtonActionsLength(int btn_idx);
+    boolean isClick(byte index);
+    boolean isPress(byte index);
+    boolean isRelease(byte index);
+    boolean isStep(byte index);
+    boolean isHolded(byte index);
+    boolean addButtonAction(int button_index, AButtonClickType button_click_type, int relay_group_index, ARelayGroupAction relay_group_action);
+    int getButtonActionsLength(int button_index);
     int getButtonActionsLength(void);
-    BTNAction * getAction(int btn_idx, int action_idx);
+    AButtonAction * getAction(int button_index, int action_index);
 };
 
 #endif

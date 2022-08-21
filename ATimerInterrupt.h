@@ -12,8 +12,8 @@ volatile bool relayStatusChanged = false;
 void IRAM_ATTR onTimer() {
   int relayStatus = relays.relayStatusAll();
   for (int idx = 0; idx < buttons.getLength(); idx++) {
-    clickType click = buttons.isClicked(idx);
-    BTNAction * btnAction;
+    AButtonClickType click = buttons.isClicked(idx);
+    AButtonAction * btnAction;
     switch (click) {
       case SHORT_CLICK:
       case LONG_CLICK:
@@ -21,7 +21,7 @@ void IRAM_ATTR onTimer() {
         for (int i = 0; i < buttons.getButtonActionsLength(idx); i++) {
           btnAction = buttons.getAction(idx, i);
           if (btnAction->click == click) {
-            switch (btnAction->rgAction) {
+            switch (btnAction->relayGroupAction) {
               case RG_ALL_ON: 
                 relays.relayGroupOn(btnAction->relayGroupIndex);
                 break;
