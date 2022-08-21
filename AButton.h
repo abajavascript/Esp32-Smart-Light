@@ -14,6 +14,7 @@ typedef struct {
 } AButtonAction;
   
 class AButton  {
+friend class AButtonArr;  
 private:
     GButton * _button = NULL;
     AButtonClickType _click;

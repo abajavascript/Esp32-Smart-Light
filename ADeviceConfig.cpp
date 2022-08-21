@@ -135,11 +135,11 @@ boolean readDeviceConfig(String deviceConfigNew) {
       jsonArrayActions.get(jsonData, 0);
       int btn_idx = jsonData.to<int>();
       jsonArrayActions.get(jsonData, 1);
-      int btn_click_type = jsonData.to<int>();
+      AButtonClickType btn_click_type = (AButtonClickType)jsonData.to<int>();
       jsonArrayActions.get(jsonData, 2);
       int relay_group_idx = jsonData.to<int>();
       jsonArrayActions.get(jsonData, 3);
-      int relay_group_action = jsonData.to<int>();
+      ARelayGroupAction relay_group_action = (ARelayGroupAction)jsonData.to<int>();
       buttons.addButtonAction(btn_idx, btn_click_type, relay_group_idx, relay_group_action);
     }
   }

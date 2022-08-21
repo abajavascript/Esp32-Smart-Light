@@ -28,7 +28,7 @@ void AButton::setClick(AButtonClickType button_click_type){
   _click = button_click_type;
 }
 
-boolean AButton::addButtonAction(AButtonClickType button_click_type, int relay_group_index, int relay_group_action) {
+boolean AButton::addButtonAction(AButtonClickType button_click_type, int relay_group_index, ARelayGroupAction relay_group_action) {
   if (_actionsLength >= MAX_BUTTON_ACTIONS_CNT) return false;
   _actions[_actionsLength].click = (AButtonClickType)button_click_type;
   _actions[_actionsLength].relayGroupIndex = relay_group_index;
