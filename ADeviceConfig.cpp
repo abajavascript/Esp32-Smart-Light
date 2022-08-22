@@ -133,14 +133,14 @@ boolean readDeviceConfig(String deviceConfigNew) {
     jsonData.get<FirebaseJsonArray>(jsonArrayActions);
     if (jsonArrayActions.size() == 4){
       jsonArrayActions.get(jsonData, 0);
-      int btn_idx = jsonData.to<int>();
+      int button_index = jsonData.to<int>();
       jsonArrayActions.get(jsonData, 1);
-      AButtonClickType btn_click_type = (AButtonClickType)jsonData.to<int>();
+      AButtonClickType button_click_type = (AButtonClickType)jsonData.to<int>();
       jsonArrayActions.get(jsonData, 2);
-      int relay_group_idx = jsonData.to<int>();
+      int relay_group_index = jsonData.to<int>();
       jsonArrayActions.get(jsonData, 3);
       ARelayGroupAction relay_group_action = (ARelayGroupAction)jsonData.to<int>();
-      buttons.addButtonAction(btn_idx, btn_click_type, relay_group_idx, relay_group_action);
+      buttons.addButtonAction(button_index, button_click_type, relay_group_index, relay_group_action);
     }
   }
   Serial.printf("Done. #ButtonActions = %d\n", buttons.getButtonActionsLength());

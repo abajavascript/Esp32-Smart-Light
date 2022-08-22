@@ -12,7 +12,9 @@ typedef struct {
     byte relayGroupIndex;
     ARelayGroupAction relayGroupAction; 
 } AButtonAction;
-  
+
+/*Class that represents individual button attached to specific pin and its actions based on click duration. 
+Use Arduino existing class GButton for actual button behaviour*/  
 class AButton  {
 friend class AButtonArr;  
 private:
@@ -31,6 +33,7 @@ public:
     AButtonAction * getAction(int action_index);
 };
 
+/*Represent configuration of all Buttons attached in device. Up to MAX_BUTTON_CNT buttons allowed*/
 class AButtonArr {
 private: 
     AButton * _buttons[MAX_BUTTON_CNT];
@@ -39,11 +42,11 @@ public:
     AButtonArr();
     ~AButtonArr();
     boolean add(uint8_t pin);
-    boolean del(byte index = -1);
+    boolean del(byte index);
     void clear(void);
     int getLength(void);
 
-    AButtonClickType isClicked(byte index = -1);
+    AButtonClickType isClicked(byte index);
 
     void tick(int index);
     boolean isClick(byte index);

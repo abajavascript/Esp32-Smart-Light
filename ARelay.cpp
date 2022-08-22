@@ -1,9 +1,18 @@
 #include "ARelay.h"
 #include <Arduino.h>
 
-// ==================== CONSTRUCTOR ====================
+// ==================== ARelay Class ====================
 ARelay::ARelay(uint8_t pin) {
 	setPin(pin);
+}
+
+void ARelay::setState(boolean state) {
+	_state = state;
+	if (_state) {
+		digitalWrite(_PIN, RELAY_ON);
+	} else {
+		digitalWrite(_PIN, RELAY_OFF);
+	}
 }
 
 uint8_t ARelay::getPin() {
@@ -16,15 +25,6 @@ void ARelay::setPin(uint8_t pin) {
     pinMode(_PIN, OUTPUT);
     ARelay::setState(false);
   }
-}
-
-void ARelay::setState(boolean state) {
-	_state = state;
-	if (_state) {
-		digitalWrite(_PIN, LOW);
-	} else {
-		digitalWrite(_PIN, HIGH);
-	}
 }
 
 boolean ARelay::isOn() {
@@ -49,10 +49,14 @@ boolean ARelay::off() {
 	return isOn();
 }
 
-// ==================== CONSTRUCTOR ====================
+// ==================== ARelayArr Class ====================
 ARelayArr::ARelayArr(){
   _length = 0;
   _lengthRelayGroups = 0;
+}
+
+ARelayArr::~ARelayArr(){
+	clear();
 }
 
 void ARelayArr::add(uint8_t pin) {
@@ -72,31 +76,23 @@ void ARelayArr::clear(void) {
   _length = 0;
 }
 
-void ARelayArr::addRelayGroup(uint16_t rg) {
-  if (_lengthRelayGroups < MAX_RELAY_GROUPS_CNT) _relayGroups[_lengthRelayGroups++] = rg;
-  Serial.printf("Initialized relay group #%i with value = %x %b  \n", _lengthRelayGroups - 1, rg, rg);
+int ARelayArr::getLength() {
+  return _length;
+}
+
+void ARelayArr::addRelayGroup(uint16_t relaysInGroup) {
+  //relaysInGroup - Bit representation of relays included in group
+  if (_lengthRelayGroups < MAX_RELAY_GROUPS_CNT) _relayGroups[_lengthRelayGroups++] = relaysInGroup;
+  //Worth to print relays configuration on BIN format instead of HEX
+  Serial.printf("Initialized relay group #%i with value = %x \n", _lengthRelayGroups - 1, relaysInGroup);
 }
 
 void ARelayArr::clearRelayGroups() {
   _lengthRelayGroups = 0;
 }
 
-int ARelayArr::getLength() {
-  return _length;
-}
 int ARelayArr::getRelayGroupsLength() {
   return _lengthRelayGroups;
-}
-
-void ARelayArr::printStatus(int index) {
-  if (index >= _length) return;
-  Serial.printf("Module at pin %d has state %d .\n", _relays[index]->getPin(), _relays[index]->isOn());
-}
-
-void ARelayArr::relayInvert(int index) {
-  if (index >= _length) return;
-  _relays[index]->invert();
-  //printStatus(index);
 }
 
 void ARelayArr::relayOn(int index)
@@ -111,6 +107,26 @@ void ARelayArr::relayOff(int index)
   if (index >= _length) return;
   _relays[index]->off();
   //printStatus(index);
+}
+
+void ARelayArr::relayInvert(int index) {
+  if (index >= _length) return;
+  _relays[index]->invert();
+  //printStatus(index);
+}
+
+void ARelayArr::relayGroupOn(int gindex) {
+  if (gindex < 0 || gindex >= _lengthRelayGroups) return;
+  uint16_t r = _relayGroups[gindex];
+  for (int ri = 0; r > 0; ri++, r=r>>1)
+    if (r & 1) relayOn(ri);
+}
+
+void ARelayArr::relayGroupOff(int gindex) {
+  if (gindex < 0 || gindex >= _lengthRelayGroups) return;
+  uint16_t r = _relayGroups[gindex];
+  for (int ri = 0; r > 0; ri++, r=r>>1)
+    if (r & 1) relayOff(ri);
 }
 
 void ARelayArr::relayGroupInvert(int gindex) {
@@ -144,20 +160,6 @@ void ARelayArr::relayGroupNextCombination(int gindex) {
     }
 }
 
-void ARelayArr::relayGroupOn(int gindex) {
-  if (gindex < 0 || gindex >= _lengthRelayGroups) return;
-  uint16_t r = _relayGroups[gindex];
-  for (int ri = 0; r > 0; ri++, r=r>>1)
-    if (r & 1) relayOn(ri);
-}
-
-void ARelayArr::relayGroupOff(int gindex) {
-  if (gindex < 0 || gindex >= _lengthRelayGroups) return;
-  uint16_t r = _relayGroups[gindex];
-  for (int ri = 0; r > 0; ri++, r=r>>1)
-    if (r & 1) relayOff(ri);
-}
-
 void ARelayArr::relaySetStatusAll(uint16_t states) {
   for (int index = 0; index < _length; index++) {
     if (states & 1) {
@@ -176,6 +178,11 @@ int ARelayArr::relayStatusAll(void) {
     if (_relays[index]->isOn()) res += 1;
   }
   return res;
+}
+
+void ARelayArr::printStatus(int index) {
+  if (index >= _length) return;
+  Serial.printf("Module at pin %d has state %d .\n", _relays[index]->getPin(), _relays[index]->isOn());
 }
 
 char * ARelayArr::relayStatusAllStr(void)
