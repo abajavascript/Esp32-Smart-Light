@@ -1,6 +1,7 @@
 #ifndef ARelay_h
 #define ARelay_h
 #include "ADeviceHWConfig.h"
+#include <Arduino.h>
 
 /*Reverse controlled relays*/
 #define RELAY_ON LOW
