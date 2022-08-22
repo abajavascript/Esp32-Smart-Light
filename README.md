@@ -2,7 +2,7 @@
 # Esp32-Smart-Light
 ## Smart Light Control
 
-This device was created as alternative to solutions based on bi-stable relays to control light in house with multiple points of controls and multiple light sources. It has posibility to control light remotely through intenet and has implemented some features like scheduling that exist in SONOFF BASIC devices. Described device implementation has 8 press buttons to control 8 relays with configurable scenarios.
+This device was created as alternative to solutions based on bi-stable relays to control light in house with multiple points of controls and multiple light sources. It has posibility to view status and control light remotely through intenet. Planned to implement some features like scheduling that exist in SONOFF BASIC devices. Described device implementation has 8 press buttons to control 8 relays with configurable scenarios. 
 
 ### Implementation
 
@@ -11,9 +11,9 @@ This device was created as alternative to solutions based on bi-stable relays to
 
 #### Requirements and Use-case descriptions
 
-In general usage one device is used to control one room with complex light control requirements. Device use Wi-Fi an support bi-direction interaction with Web (Mobile) Application: display status and receive control commands. To control the light are used push buttons without fixing state. In current implementation 8 separate button chanels and 8 separate relays. In complex cases buttons can be paralelled. WIFI Credential are configurable. Firebase Realtime database used for data/status/commands interchange and storing historical information. NTP is used for real time synchronization. Device configuration (button and relays pins, action behavior, schedule timers, etc) is stored in EEPROM or loaded from internet using JSON format.
+In general use-case scenario - one device is used to control one room with complex light control requirements. Device use Wi-Fi an support bi-direction interaction with Web (Mobile) Application: display status and receive control commands. To control the light are used push buttons without fixing state. In current implementation 8 separate button chanels and 8 separate relays. In complex cases buttons can be paralelled. WIFI Credential are configurable. Firebase Realtime database used for data/status/commands interchange and storing historical information. NTP is used for real time synchronization. Device configuration (button and relays pins, action behavior, schedule timers, etc) is stored in EEPROM or loaded from internet using JSON format.
 
-In default configuration 8 buttons and 8 relays grouped into for pair. Every two buttons from every group control two relays from corresponding relay group. Short press, less than 1 sec, contuniosly change relay group combination (OffOn, OnOff, OnOn, OffOff). Long press - 1..2 sec - set On of all relays in group. If all relay in group are already on then Off all relays in group. Very long press, more than 3 sec - swithc off all relays in device. If all relays are already off then On all relays. Relays can be grouped in different groups. Each relay can belong to number of groups. Button action can have multiple scenarious to work with different relays groups. Configuration can be updated throught the internet. 
+In default configuration 8 buttons and 8 relays grouped into for pair. Every two buttons from every group control two relays from corresponding relay group. Short press, less than 1 sec, contuniosly change relay group state combination (OffOn, OnOff, OnOn, OffOff - binary number incrementing behaviour). Long press - 1..2 sec - set On all relays in group. If all relay in group are already On then Off all relays in group. Very long press, more than 3 sec - switch Off all relays in device (this is done by configuring relay group with all relays). If all relays are already Off then On all relays. Relays can be grouped in different groups. Each relay can belong to number of groups. Button action can have multiple scenarious to work with different relays groups. Configuration can be updated throught the internet. 
 
 #### Implementation
 Solution is implemented on [ESP-WROOM-32 38 PIN Develeopment Board PINOUT](https://www.studiopieters.nl/esp32-pinout/). 38 pin  edition was selected to maximize number of PIN. Minimal requirement was to have at least 8 buttons and 8 relays.
@@ -22,7 +22,7 @@ Solution is implemented on [ESP-WROOM-32 38 PIN Develeopment Board PINOUT](https
 #### Device
 ![Photo 01](https://github.com/abajavascript/Esp32-Smart-Light/blob/main/pic/Device-01.jpg)
 ![Photo 02](https://github.com/abajavascript/Esp32-Smart-Light/blob/main/pic/Device-02.jpg)
-![Photo 02](https://github.com/abajavascript/Esp32-Smart-Light/blob/main/pic/Device-02.jpg)
+![Photo 03](https://github.com/abajavascript/Esp32-Smart-Light/blob/main/pic/Device-03.jpg)
 
 
 ## Used references
