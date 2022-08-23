@@ -24,11 +24,25 @@ void initWiFi(){
   bool res = wm.autoConnect(wm.getDefaultAPName().c_str(), WM_PASSWORD); // password protected ap
   if (!res) {
     Serial.println("Failed to connect");
-    delay(3000);
-    //reset and try again, or maybe put it to deep sleep
-    ESP.restart();
-    delay(5000);
+    //ESP.restart();
   } else {
+    postConnectedWiFi();
+  }
+  delay(2000);
+}
+
+void checkWiFi(){
+  if ((WiFi.status() != WL_CONNECTED)) {
+    Serial.println("Reconnecting to WiFi...");
+    WiFi.disconnect();
+    WiFi.reconnect();
+    postConnectedWiFi();
+  }
+}
+
+void postConnectedWiFi(){
+  delay(1000);
+  if ((WiFi.status() == WL_CONNECTED)) {
     Serial.print("Connected with IP: ");
     Serial.println(WiFi.localIP());
     mac = WiFi.macAddress();
@@ -37,6 +51,5 @@ void initWiFi(){
     deviceId.replace(":", "-");
   }
 }
-
 
 #endif

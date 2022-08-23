@@ -8,7 +8,9 @@
 
 //General configuration        
 #define UPDATE_INTERVAL 600// 60 //interval in seconds to update sensors
+#define RECONNECT_WIFI_INTERVAL 900// check WiFi and reconnect every 15 min
 uint32_t updateTiming;
+uint32_t reconnectWiFiMillis;
 
  
 void setup() {
@@ -18,6 +20,8 @@ void setup() {
   readDeviceConfig();
 
   initWiFi();  
+  //to force WiFi reconnect in loop, because router has 2-3 min to startup (after 3 minutes)
+  reconnectWiFiMillis = millis() - RECONNECT_WIFI_INTERVAL * 1000 + 3 * 60 * 1000;
 
   initFirebase();
 
@@ -28,9 +32,10 @@ void setup() {
 }
 
 void loop() {
-  if (fbEventReceived) {
-    fbEventReceived = false;
-    Serial.printf("Clear fbEventReceived flag\n");
+  //check WiFi and reconnect if needed
+  if (millis() - reconnectWiFiMillis > RECONNECT_WIFI_INTERVAL * 1000){
+    checkWiFi();
+    reconnectWiFiMillis = millis();
   }
 
   if (fbCommandSaveReceived) {

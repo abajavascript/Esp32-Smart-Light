@@ -26,7 +26,6 @@ FirebaseData stream;
 FirebaseAuth auth;
 /* Define the FirebaseConfig data for config data */
 FirebaseConfig config;
-volatile bool fbEventReceived = false;
 volatile bool fbCommandRefreshReceived = false;
 volatile bool fbCommandSaveReceived = false;
 volatile bool fbCommandLoadReceived = false;
@@ -105,24 +104,20 @@ void firebaseStreamCallback(StreamData data) {
 
   //Due to limited of stack memory, do not perform any task that used large memory here especially starting connect to server.
   //Just set this flag and check it status later.
-  fbEventReceived = true;
   
   if (data.dataTypeEnum() != fb_esp_rtdb_data_type_string) return;
   String str = data.to<String>();
 
-  if (str == "refresh") {
+  if (str == "refresh") //command that request update firebase realtime database with fresh information about relay state
     fbCommandRefreshReceived = true;
-  }
   
-  if (str == "save") {
+  if (str == "save") //command to save Device Config JSON to Firebase
     fbCommandSaveReceived = true;
-  }
   
-  if (str == "load") {
+  if (str == "load") //command to load Device Config from Firebase
     fbCommandLoadReceived = true;
-  }
   
-  if (str.startsWith("set:")) {
+  if (str.startsWith("set:")) { //set On/Off relays 1-On, 0-Off, Other-Off
     fbCommandSetReceived = true;
     fbCommandSetNewState = 0;
     for (int i = 4; i < str.length(); i++) {
@@ -130,7 +125,6 @@ void firebaseStreamCallback(StreamData data) {
       if (str[i] == '1') fbCommandSetNewState |= 1;
     }
   }
- 
 }
 
 void firebaseStreamTimeoutCallback(bool timeout) {
