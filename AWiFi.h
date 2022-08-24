@@ -14,6 +14,8 @@
 
 String mac, deviceId;
 
+void postConnectedWiFi();
+
 void initWiFi(){
   //WiFi initialization
   Serial.println("Initializing Wi-Fi");
