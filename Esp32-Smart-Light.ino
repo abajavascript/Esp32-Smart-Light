@@ -1,5 +1,6 @@
 #include "ADeviceConfig.h"
 #include "AWiFi.h"
+#include "ABasicOTA.h"
 #include "ANTPTime.h"
 #include "AFirebase.h"
 #include "ATimerInterrupt.h"
@@ -23,6 +24,8 @@ void setup() {
   //to force WiFi reconnect in loop, because router has 2-3 min to startup (after 3 minutes)
   reconnectWiFiMillis = millis() - RECONNECT_WIFI_INTERVAL * 1000 + 3 * 60 * 1000;
 
+  initBasicOTA();
+
   initFirebase();
 
   //to force immediate execution (after 3 second)
@@ -32,6 +35,9 @@ void setup() {
 }
 
 void loop() {
+  //Handle OTA requests if needed
+  handleBasicOTA();
+  
   //check WiFi and reconnect if needed - looks that it reconnects without this code with checkWiFi
   if (millis() - reconnectWiFiMillis > RECONNECT_WIFI_INTERVAL * 1000){
     checkWiFi();
