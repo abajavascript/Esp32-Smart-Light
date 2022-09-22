@@ -37,6 +37,7 @@ String startTime = "";
 bool fbStoreSensorData(void){
   //upload to DB
 
+  if ((WiFi.status() != WL_CONNECTED)) return false;
   if (!Firebase.ready()) return false;
 
   String currentPath;

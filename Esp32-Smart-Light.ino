@@ -32,7 +32,7 @@ void setup() {
 }
 
 void loop() {
-  //check WiFi and reconnect if needed
+  //check WiFi and reconnect if needed - looks that it reconnects without this code with checkWiFi
   if (millis() - reconnectWiFiMillis > RECONNECT_WIFI_INTERVAL * 1000){
     checkWiFi();
     reconnectWiFiMillis = millis();
