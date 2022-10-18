@@ -6,11 +6,13 @@
 #include "ATimerInterrupt.h"
 #include "AButton.h"
 #include "ARelay.h"
+#include "ASchedule.h"
 
 //General configuration        
 #define UPDATE_INTERVAL 600// 60 //interval in seconds to update sensors
+#define UPDATE_SCHEDULES_INTERVAL 60 //interval in seconds to process schedules
 #define RECONNECT_WIFI_INTERVAL 900// check WiFi and reconnect every 15 min
-uint32_t updateTiming;
+uint32_t updateTiming, updateSchedulesTiming;
 uint32_t reconnectWiFiMillis;
 
  
@@ -19,6 +21,8 @@ void setup() {
   Serial.begin(115200);
 
   readDeviceConfig();
+
+  readSchedulesConfig();
 
   initWiFi();  
   //to force WiFi reconnect in loop, because router has 2-3 min to startup (after 3 minutes)
@@ -30,6 +34,7 @@ void setup() {
 
   //to force immediate execution (after 3 second)
   updateTiming = millis() - UPDATE_INTERVAL * 1000 + 3 * 1000;
+  updateSchedulesTiming = millis() - UPDATE_SCHEDULES_INTERVAL * 1000 + 3 * 1000;
 
   initTimerInterrupt();
 }
@@ -44,12 +49,25 @@ void loop() {
     reconnectWiFiMillis = millis();
   }
 
+  //process al schedules
+  if (millis() - updateSchedulesTiming > UPDATE_SCHEDULES_INTERVAL * 1000) {
+    Serial.println("Start process schedules ! ");
+    updateSchedulesTiming = millis();
+    if (schedules.process()){
+      Serial.println("Schedules changed relay status ! ");
+      portENTER_CRITICAL_ISR(&timerMux);
+      relayStatusChanged = true;
+      portEXIT_CRITICAL_ISR(&timerMux);
+    }
+  }
+
   if (fbCommandSaveReceived) {
     saveConfigToFirebase();
   }
   if (fbCommandLoadReceived) {
     loadConfigFromFirebase();
   }
+
   //wait for some period of second to collect and upload sensors only onece per UPDATE_INTERVAL seconds
   if ((millis() - updateTiming < UPDATE_INTERVAL * 1000) && (!fbCommandRefreshReceived) && (!fbCommandSetReceived) && (!relayStatusChanged)) return;
   updateTiming = millis();

@@ -182,4 +182,13 @@ void loadConfigFromFirebase(void) {
   fbClearCommand();
 }
 
+void loadSchedulesFromFirebase(void) {
+  String currentPath = "/sensors/" + deviceId + "/schedules";
+
+  Serial.printf("Load schedules from %s... %s\n", currentPath.c_str(), Firebase.getJSON(fbdo, currentPath.c_str()) ? "ok" : fbdo.errorReason().c_str());
+  readSchedulesConfig(fbdo.to<String>());
+
+  fbClearCommand();
+}
+
 #endif
