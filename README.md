@@ -48,6 +48,9 @@ Described implementation of hardware interrupt on pin state change using attachI
 Not used in this solution as need to implement debouncing functionality. Have not found any way to implement this programically (maybe be need to think or google more about approaches).
 Hardware debouncing could increased complexity and cost, as well not confidence that this will work as designed. One more blocker no way to easily tune debounce duration.
 
+Arduino [Dusk2Down](https://github.com/dmkishi/Dusk2Dawn) library to calculate SunRise and SunSet at specific location. 
+Nice [visualization](https://www.timeanddate.com/sun/ukraine/lviv) of sunrise and sunset at Lviv.
+
 ### ESP32 Timer interrupts
 [ESP32 Arduino: Timer interrupts](https://techtutorialsx.com/2017/10/07/esp32-arduino-timer-interrupts/)
 [Timer Interrupts with ESP32](https://iotespresso.com/timer-interrupts-with-esp32/)
