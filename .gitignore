@@ -1,3 +1,4 @@
 secret.h
 *.bin
 *.bat
+build
