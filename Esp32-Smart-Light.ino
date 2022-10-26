@@ -61,11 +61,17 @@ void loop() {
     }
   }
 
-  if (fbCommandSaveReceived) {
+  if (fbCommandSaveConfigReceived) {
     saveConfigToFirebase();
   }
-  if (fbCommandLoadReceived) {
+  if (fbCommandLoadConfigReceived) {
     loadConfigFromFirebase();
+  }
+  if (fbCommandSaveSchedulesReceived) {
+    saveSchedulesToFirebase();
+  }
+  if (fbCommandLoadSchedulesReceived) {
+    loadSchedulesFromFirebase();
   }
 
   //wait for some period of second to collect and upload sensors only onece per UPDATE_INTERVAL seconds

@@ -27,8 +27,10 @@ FirebaseAuth auth;
 /* Define the FirebaseConfig data for config data */
 FirebaseConfig config;
 volatile bool fbCommandRefreshReceived = false;
-volatile bool fbCommandSaveReceived = false;
-volatile bool fbCommandLoadReceived = false;
+volatile bool fbCommandSaveConfigReceived = false;
+volatile bool fbCommandLoadConfigReceived = false;
+volatile bool fbCommandSaveSchedulesReceived = false;
+volatile bool fbCommandLoadSchedulesReceived = false;
 volatile bool fbCommandSetReceived = false;
 volatile uint32_t fbCommandSetNewState = 0;
 
@@ -59,6 +61,12 @@ bool fbStoreSensorData(void){
     Serial.printf("Update uptime informatione to %s... %s\n", currentPath.c_str(), Firebase.setString/*Async*/(fbdo, currentPath.c_str(), timePath.c_str()) ? "ok" : fbdo.errorReason().c_str());
   }
 
+  if (ip == "") {
+    ip = WiFi.localIP().toString();
+    currentPath = "/sensorsList/" + deviceId + "/ip";
+    Serial.printf("Strore sensor IP to %s... %s\n", currentPath.c_str(), Firebase.setString/*Async*/(fbdo, currentPath.c_str(), ip.c_str()) ? "ok" : fbdo.errorReason().c_str());
+  }
+
   FirebaseJson jsonR;
   jsonR.set("r", relays.relayStatusAllStr());
   currentPath = "/relays/" + deviceId + "/" + timePath;
@@ -75,8 +83,10 @@ bool fbStoreSensorData(void){
 
 void fbClearCommand(void) {
   fbCommandRefreshReceived = false;
-  fbCommandSaveReceived = false;
-  fbCommandLoadReceived = false;
+  fbCommandSaveConfigReceived = false;
+  fbCommandLoadConfigReceived = false;
+  fbCommandSaveSchedulesReceived = false;
+  fbCommandLoadSchedulesReceived = false;
   fbCommandSetReceived = false;
   
   if (Firebase.ready()) {
@@ -112,11 +122,22 @@ void firebaseStreamCallback(StreamData data) {
   if (str == "refresh") //command that request update firebase realtime database with fresh information about relay state
     fbCommandRefreshReceived = true;
   
-  if (str == "save") //command to save Device Config JSON to Firebase
-    fbCommandSaveReceived = true;
+  if (str == "save-config") //command to save Device Config JSON to Firebase
+    fbCommandSaveConfigReceived = true;
+  if (str == "save-schedules") //command to save Schedules configuration to Firebase
+    fbCommandSaveSchedulesReceived = true;
+  if (str == "save") {//command to save Device Config and Schedules to Firebase
+    fbCommandSaveConfigReceived = true;
+    fbCommandSaveSchedulesReceived = true;
+  }
   
-  if (str == "load") //command to load Device Config from Firebase
-    fbCommandLoadReceived = true;
+  if (str == "load-config") //command to load Device Config from Firebase
+    fbCommandLoadConfigReceived = true;
+  if (str == "load-schedules") //command to load Schedules from Firebase
+    fbCommandLoadSchedulesReceived = true;
+  if (str == "load") //command to load Device Config and Schedules from Firebase
+    fbCommandLoadConfigReceived = true;
+    fbCommandLoadSchedulesReceived = true;
   
   if (str.startsWith("set:")) { //set On/Off relays 1-On, 0-Off, Other-Off
     fbCommandSetReceived = true;
@@ -178,6 +199,16 @@ void loadConfigFromFirebase(void) {
 
   Serial.printf("Load config from %s... %s\n", currentPath.c_str(), Firebase.getJSON(fbdo, currentPath.c_str()) ? "ok" : fbdo.errorReason().c_str());
   readDeviceConfig(fbdo.to<String>());
+
+  fbClearCommand();
+}
+
+void saveSchedulesToFirebase(void) {
+  String currentPath = "/sensors/" + deviceId + "/schedules";
+
+  FirebaseJson schedulesConfigJson;
+  schedulesConfigJson.setJsonData(schedulesConfig);
+  Serial.printf("Strore schedules to %s... %s\n", currentPath.c_str(), Firebase.set/*Async*/(fbdo, currentPath.c_str(), schedulesConfigJson) ? "ok" : fbdo.errorReason().c_str());
 
   fbClearCommand();
 }

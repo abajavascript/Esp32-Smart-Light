@@ -124,6 +124,15 @@ boolean readDeviceConfig(String deviceConfigNew) {
     return false;
   } 
 
+  if (deviceConfigNew != "") { //deviceConfigNew is not empty in case we executed this function with data received from Firebase
+    //Write device configuration received from Firebase to EEPROM 
+    Preferences prefs;
+    prefs.begin("smart-light");
+    prefs.putString("device-config", deviceConfig);
+    prefs.end();
+    Serial.printf("Stored device config in EEPROM. New Value : %s\n", deviceConfig);
+  }
+
   //Print deserialized JSON with pretifing
   String str;
   deviceConfigJson.toString(str, true /* prettify option */);
@@ -219,6 +228,15 @@ boolean readSchedulesConfig(String schedulesConfigNew) {
     Serial.println("Schedules Deserealization failed.");
     return false;
   } 
+
+  if (schedulesConfigNew != "") { //deviceConfigNew is not empty in case we executed this function with data received from Firebase
+    //Write device configuration received from Firebase to EEPROM 
+    Preferences prefs;
+    prefs.begin("smart-light");
+    prefs.putString("schedules-config", schedulesConfig);
+    prefs.end();
+    Serial.printf("Stored schedules config in EEPROM. New Value : %s\n", schedulesConfig);
+  }
 
   //Print deserialized JSON with pretifing
   String str;

@@ -12,7 +12,7 @@
 #define WM_PASSWORD "123456"
 #endif
 
-String mac, deviceId;
+String mac, deviceId, ip;
 
 void postConnectedWiFi();
 void onWifiConnect(WiFiEvent_t event, WiFiEventInfo_t info);
@@ -56,6 +56,8 @@ void postConnectedWiFi() {
     Serial.printf("Device MAC = %s\n", mac.c_str());
     deviceId = WiFi.macAddress();//use ESP unique MAC as device id
     deviceId.replace(":", "-");
+    //ip = WiFi.localIP().toString();
+    ip = "";//Make IP empty to force IP storing into Firebase
   }
 }
 
