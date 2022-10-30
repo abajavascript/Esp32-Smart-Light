@@ -18,7 +18,7 @@ const char * schedulesConfigDefault =
 //          "\"schedules\" : ["
               "{"
                    "\"description\" : \"Switch off everything at 24:00 everyday\"," //String with description what is the purpose of schedule
-                   "\"active\" : false," //boolean : off = false, on = true
+                   "\"active\" : true," //boolean : off = false, on = true
                    "\"dayOfWeek\" : \"1111111\"," //String; Example '0111110' (sun, mon, .., sat)
                    "\"when\" : 0," //int; exactTime = 0, beforeSunrise = 1, afterSunrise = 2, beforeSunshine = 3, afterSunshine = 4
                    "\"hour\" : 0," //int : hour 0..23
@@ -26,31 +26,58 @@ const char * schedulesConfigDefault =
                    "\"action\" : \"00000000\" " //String; '??11??00' off = 0, on = 1, skip = ?, inver = !
               "},"
               "{"
-                   "\"description\" : \"Switch on everything at 20:52 everyday\"," //String with description what is the purpose of schedule
+                   "\"description\" : \"Switch on everything at 11:11 everyday\"," //String with description what is the purpose of schedule
                    "\"active\" : true," //boolean : off = false, on = true
                    "\"dayOfWeek\" : \"1111111\"," //String; Example '0111110' (sun, mon, .., sat)
                    "\"when\" : 0," //int; exactTime = 0, beforeSunrise = 1, afterSunrise = 2, beforeSunshine = 3, afterSunshine = 4
-                   "\"hour\" : 21," //int : hour 0..23
-                   "\"minute\" : 42," //int : 0..59
+                   "\"hour\" : 11," //int : hour 0..23
+                   "\"minute\" : 11," //int : 0..59
                    "\"action\" : \"11111111\" " //String; '??11??00' off = 0, on = 1, skip = ?, inver = !
               "},"
               "{"
-                   "\"description\" : \"Switch on everything at SUNrise everyday\"," //String with description what is the purpose of schedule
+                   "\"description\" : \"Do someaction at 01:01 Mon, Tue...Fri\"," //String with description what is the purpose of schedule
                    "\"active\" : true," //boolean : off = false, on = true
-                   "\"dayOfWeek\" : \"0000100\"," //String; Example '0111110' (sun, mon, .., sat)
+                   "\"dayOfWeek\" : \"0111110\"," //String; Example '0111110' (sun, mon, .., sat)
+                   "\"when\" : 0," //int; exactTime = 0, beforeSunrise = 1, afterSunrise = 2, beforeSunshine = 3, afterSunshine = 4
+                   "\"hour\" : 1," //int : hour 0..23
+                   "\"minute\" : 1," //int : 0..59
+                   "\"action\" : \"11!!1??0\" " //String; '??11??00' off = 0, on = 1, skip = ?, inver = !
+              "},"
+              "{"
+                   "\"description\" : \"Switch on/off 10:23 min before SUNrise on Mon, Web, Fri\"," //String with description what is the purpose of schedule
+                   "\"active\" : true," //boolean : off = false, on = true
+                   "\"dayOfWeek\" : \"0101010\"," //String; Example '0111110' (sun, mon, .., sat)
                    "\"when\" : 1," //int; exactTime = 0, beforeSunrise = 1, afterSunrise = 2, beforeSunshine = 3, afterSunshine = 4
-                   "\"hour\" : 9," //int : hour 0..23
-                   "\"minute\" : 42," //int : 0..59
+                   "\"hour\" : 10," //int : hour 0..23
+                   "\"minute\" : 23," //int : 0..59
                    "\"action\" : \"10101010\" " //String; '??11??00' off = 0, on = 1, skip = ?, inver = !
               "},"
               "{"
-                   "\"description\" : \"On Sun, Mon, Tue at 1:15 before sunshine use multiple actions\"," 
-                   "\"active\" : false,"
+                   "\"description\" : \"Switch on/off 1:34 min after SUNrise on Mon, Tue, Web\"," //String with description what is the purpose of schedule
+                   "\"active\" : true," //boolean : off = false, on = true
+                   "\"dayOfWeek\" : \"0111000\"," //String; Example '0111110' (sun, mon, .., sat)
+                   "\"when\" : 2," //int; exactTime = 0, beforeSunrise = 1, afterSunrise = 2, beforeSunshine = 3, afterSunshine = 4
+                   "\"hour\" : 1," //int : hour 0..23
+                   "\"minute\" : 34," //int : 0..59
+                   "\"action\" : \"!!????11\" " //String; '??11??00' off = 0, on = 1, skip = ?, inver = !
+              "},"
+              "{"
+                   "\"description\" : \"On Sun, Mon, Tue at 23:15 before sunset use multiple actions\"," 
+                   "\"active\" : true,"
                    "\"dayOfWeek\" : \"1110000\"," //sun, mon, tue
                    "\"when\" : 3," 
-                   "\"hour\" : 1," 
+                   "\"hour\" : 23," 
                    "\"minute\" : 15," 
                    "\"action\" : \"??11!!00\" " // off = 0, on = 1, skip = ?, inver = !
+              "},"
+              "{"
+                   "\"description\" : \"On Sun, Tue, Wed at 9:23 after sunset use multiple actions\"," 
+                   "\"active\" : true,"
+                   "\"dayOfWeek\" : \"1011000\"," //sun, mon, tue
+                   "\"when\" : 4," 
+                   "\"hour\" : 9," 
+                   "\"minute\" : 23," 
+                   "\"action\" : \"??00!!00\" " // off = 0, on = 1, skip = ?, inver = !
               "}"
 //          "]"
       "]";
@@ -209,8 +236,12 @@ boolean readSchedulesConfig(String schedulesConfigNew) {
   Serial.printf("Initializing schedules...\n");
   for (size_t i = 0; i < jsonArray.size(); i++){
     jsonArray.get(jsonData, i);
-    ASchedule * schedule = new ASchedule();
     jsonData.getJSON(FirebaseJsonObject);
+    //skip if there is no description
+    FirebaseJsonObject.get(jsonDataVal, "description");
+    if (jsonDataVal.to<String>() == "") continue;
+
+    ASchedule * schedule = new ASchedule();
     FirebaseJsonObject.get(jsonDataVal, "description");
     schedule->_description = jsonDataVal.to<String>();
     FirebaseJsonObject.get(jsonDataVal, "active");

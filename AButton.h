@@ -1,10 +1,10 @@
 #ifndef AButton_h
 #define AButton_h
-#include "ADeviceHWConfig.h"
 #include <GyverButton.h>
+#include <LinkedList.h>
 
 enum AButtonClickType {NO_CLICK, SHORT_CLICK, LONG_CLICK, LONGLONG_CLICK};
-enum ARelayGroupAction {RG_NO_ACTION, RG_ALL_ON, RG_ALL_OFF, RG_INVERT, RG_NEXT_COMBINATION, RG_ON_OR_INVERT, RG_OFF_OR_INVERT};
+enum ARelayGroupAction {RG_NO_ACTION, RG_ALL_ON, RG_ALL_OFF, RG_INVERT, RG_ON_OR_INVERT, RG_OFF_OR_INVERT, RG_NEXT_BIN_COMBINATION, RG_NEXT_SET_COMBINATION};
 
 /*Structure describes what action to perform on specific Relay Group based on click type (duration) */
 typedef struct {
@@ -20,8 +20,8 @@ friend class AButtonArr;
 private:
     GButton * _button = NULL;
     AButtonClickType _click;
-    int _actionsLength;    
-    AButtonAction _actions[MAX_BUTTON_ACTIONS_CNT];
+    LinkedList<AButtonAction> _actions;
+
     void setClick(AButtonClickType button_click_type);
 public:
     AButton(uint8_t pin);
@@ -36,8 +36,7 @@ public:
 /*Represent configuration of all Buttons attached in device. Up to MAX_BUTTON_CNT buttons allowed*/
 class AButtonArr {
 private: 
-    AButton * _buttons[MAX_BUTTON_CNT];
-    int _length;
+    LinkedList<AButton *> _buttons;
 public:
     AButtonArr();
     ~AButtonArr();

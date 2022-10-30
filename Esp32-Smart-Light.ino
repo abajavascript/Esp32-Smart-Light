@@ -9,7 +9,8 @@
 #include "ASchedule.h"
 
 //General configuration        
-#define UPDATE_INTERVAL 600// 60 //interval in seconds to update sensors
+//aaaaaaaaaa #define UPDATE_INTERVAL 600// 60 //interval in seconds to update sensors
+#define UPDATE_INTERVAL (60*60*24*30)// Тестово раз вмісяць
 #define UPDATE_SCHEDULES_INTERVAL 60 //interval in seconds to process schedules
 #define RECONNECT_WIFI_INTERVAL 900// check WiFi and reconnect every 15 min
 uint32_t updateTiming, updateSchedulesTiming;
@@ -61,8 +62,17 @@ void loop() {
     }
   }
 
+  //Process commands received from webapp
   if (fbCommandResetReceived) {
     resetConfigAndSchedules();
+  }
+  if (fbCommandSaveConfigReceived && fbCommandSaveSchedulesReceived) {
+    saveConfigToFirebase();
+    saveSchedulesToFirebase();
+  }
+  if (fbCommandLoadConfigReceived && fbCommandLoadSchedulesReceived) {
+    loadConfigFromFirebase();
+    loadSchedulesFromFirebase();
   }
   if (fbCommandSaveConfigReceived) {
     saveConfigToFirebase();

@@ -150,13 +150,26 @@ void ARelayArr::relayGroupOffOrInvert(int gindex) {
   if (status == relayStatusAll()) relayGroupInvert(gindex);
 }
 
-void ARelayArr::relayGroupNextCombination(int gindex) {
+void ARelayArr::relayGroupNextBinCombination(int gindex) {
   if (gindex < 0 || gindex >= _lengthRelayGroups) return;
   uint16_t r = _relayGroups[gindex];
   for (int ri = 0; r > 0; ri++, r=r>>1)
     if (r & 1) {
       if (_relays[ri]->isOff()) {relayOn(ri); break;}
       if (_relays[ri]->isOn()) relayOff(ri);
+    }
+}
+
+void ARelayArr::relayGroupNextSetCombination(int gindex) {
+  if (gindex < 0 || gindex >= _lengthRelayGroups) return;
+  uint16_t r = _relayGroups[gindex];
+  for (int ri = 0; r > 0; ri++, r=r>>1)
+    if (r & 1) {
+      if (_relays[ri]->isOff()) {relayOn(ri); return;}
+    }
+  for (int ri = 0; r > 0; ri++, r=r>>1)
+    if (r & 1) {
+      if (_relays[ri]->isOn()) {relayOff(ri); return;}
     }
 }
 

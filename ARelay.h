@@ -2,6 +2,7 @@
 #define ARelay_h
 #include "ADeviceHWConfig.h"
 #include <Arduino.h>
+#include <LinkedList.h>
 
 /*Reverse controlled relays*/
 #define RELAY_ON LOW
@@ -33,6 +34,7 @@ class ARelayArr {
 private: 
     ARelay * _relays[MAX_RELAY_CNT];
     int _length;
+    
     char _relaysStatus[MAX_RELAY_CNT + 1];
     uint16_t _relayGroups[MAX_RELAY_GROUPS_CNT];
     int _lengthRelayGroups;
@@ -57,7 +59,8 @@ public:
     void relayGroupInvert(int gindex);
     void relayGroupOnOrInvert(int gindex);
     void relayGroupOffOrInvert(int gindex);
-    void relayGroupNextCombination(int gindex);
+    void relayGroupNextBinCombination(int gindex);
+    void relayGroupNextSetCombination(int gindex);
 
     void relaySetStatusAll(uint16_t states); 
     int relayStatusAll(void);

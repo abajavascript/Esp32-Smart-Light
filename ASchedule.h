@@ -11,7 +11,7 @@ public:
     String _description;
     boolean _active; //off = false, on = true
     String _dayOfWeek; //Example '0111110' (sun, mon, .., sat)
-    int _when; //exactTime = 0, beforeSunrise = 1, afterSunrise = 2, beforeSunshine = 3, afterSunshine = 4
+    int _when; //exactTime = 0, beforeSunrise = 1, afterSunrise = 2, beforeSunset = 3, afterSunset = 4
     int _hour; //0...23
     int _minute; //0..59
     String _action; //'??11??00' off = 0, on = 1, skip = ?, inver = !

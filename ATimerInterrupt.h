@@ -31,14 +31,17 @@ void IRAM_ATTR onTimer() {
               case RG_INVERT: 
                 relays.relayGroupInvert(btnAction->relayGroupIndex);
                 break;
-              case RG_NEXT_COMBINATION: 
-                relays.relayGroupNextCombination(btnAction->relayGroupIndex);
-                break;
               case RG_ON_OR_INVERT: 
                 relays.relayGroupOnOrInvert(btnAction->relayGroupIndex);
                 break;
               case RG_OFF_OR_INVERT:
                 relays.relayGroupOffOrInvert(btnAction->relayGroupIndex);
+                break;
+              case RG_NEXT_BIN_COMBINATION: 
+                relays.relayGroupNextBinCombination(btnAction->relayGroupIndex);
+                break;
+              case RG_NEXT_SET_COMBINATION: 
+                relays.relayGroupNextSetCombination(btnAction->relayGroupIndex);
                 break;
             }
           }
