@@ -61,6 +61,9 @@ void loop() {
     }
   }
 
+  if (fbCommandResetReceived) {
+    resetConfigAndSchedules();
+  }
   if (fbCommandSaveConfigReceived) {
     saveConfigToFirebase();
   }

@@ -63,7 +63,7 @@ boolean readDeviceConfig(String deviceConfigNew) {
     //Read device configuration from EEPROM or use default in deviceConfigDefault
     Preferences prefs;
     prefs.begin("smart-light");
-    deviceConfig = prefs.getString("device-config", deviceConfigDefault);
+    deviceConfig = prefs.getString("device-conf", deviceConfigDefault);
     prefs.end();
   } else {
     deviceConfig = deviceConfigNew;
@@ -87,9 +87,9 @@ boolean readDeviceConfig(String deviceConfigNew) {
     //Write device configuration received from Firebase to EEPROM 
     Preferences prefs;
     prefs.begin("smart-light");
-    prefs.putString("device-config", deviceConfig);
+    prefs.putString("device-conf", deviceConfig);
     prefs.end();
-    Serial.printf("Stored device config in EEPROM. New Value : %s\n", deviceConfig);
+    Serial.printf("Stored device config in EEPROM. New Value : %s\n", deviceConfig.c_str());
   }
 
   //Print deserialized JSON with pretifing
@@ -168,7 +168,7 @@ boolean readSchedulesConfig(String schedulesConfigNew) {
     //Read device configuration from EEPROM or use default in schedulesConfigDefault - which by default is empty array
     Preferences prefs;
     prefs.begin("smart-light");
-    schedulesConfig = prefs.getString("schedules-config", schedulesConfigDefault);
+    schedulesConfig = prefs.getString("schedules-conf", schedulesConfigDefault);
     prefs.end();
   } else {
     schedulesConfig = schedulesConfigNew;
@@ -192,9 +192,9 @@ boolean readSchedulesConfig(String schedulesConfigNew) {
     //Write device configuration received from Firebase to EEPROM 
     Preferences prefs;
     prefs.begin("smart-light");
-    prefs.putString("schedules-config", schedulesConfig);
+    prefs.putString("schedules-conf", schedulesConfig);
     prefs.end();
-    Serial.printf("Stored schedules config in EEPROM. New Value : %s\n", schedulesConfig);
+    Serial.printf("Stored schedules config in EEPROM. New Value : %s\n", schedulesConfig.c_str());
   }
 
   //Print deserialized JSON with pretifing
@@ -233,3 +233,11 @@ boolean readSchedulesConfig(String schedulesConfigNew) {
   return true;
 }
 
+void clearAllPreferences(void) {
+  Preferences prefs;
+  prefs.begin("smart-light");
+  prefs.remove("device-conf");
+  prefs.remove("schedules-conf");
+  prefs.end();
+  Serial.printf("Stored schedules config in EEPROM. New Value : %s\n", schedulesConfig.c_str());
+}

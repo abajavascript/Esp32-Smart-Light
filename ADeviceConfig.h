@@ -6,6 +6,7 @@
 #include "ASchedule.h"
 boolean readDeviceConfig(String deviceConfigNew = "");
 boolean readSchedulesConfig(String schedulesConfigNew = "");
+void clearAllPreferences(void);
 
 extern String deviceConfig;
 extern String schedulesConfig;
