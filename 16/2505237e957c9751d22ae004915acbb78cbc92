@@ -1,0 +1,19 @@
+Esp32-Smart-Light.ino
+  s_6afa56dcc23b52::t_beab611a7f6e16 28-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "162505237e957c9751d22ae004915acbb78cbc92",
+  "prompts": {},
+  "sessions": {
+    "s_6afa56dcc23b52": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "efacfe15-f571-47a3-91c6-22d922a427d0",
+        "model": "auto-smart"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>"
+    }
+  }
+}
