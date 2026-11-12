@@ -45,7 +45,12 @@ void setup() {
 void loop() {
   //Handle OTA requests if needed
   handleBasicOTA();
-  
+
+  handleWiFi();
+
+  //Handle Firebase reconnect
+  Firebase.ready();// Firebase.ready() should be called repeatedly to handle authentication tasks.
+
   //check WiFi and reconnect if needed - looks that it reconnects without this code with checkWiFi
   if (millis() - reconnectWiFiMillis > RECONNECT_WIFI_INTERVAL * 1000){
     checkWiFi();

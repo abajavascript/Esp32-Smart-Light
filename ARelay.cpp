@@ -163,14 +163,23 @@ void ARelayArr::relayGroupNextBinCombination(int gindex) {
 void ARelayArr::relayGroupNextSetCombination(int gindex) {
   if (gindex < 0 || gindex >= _lengthRelayGroups) return;
   uint16_t r = _relayGroups[gindex];
-  for (int ri = 0; r > 0; ri++, r=r>>1)
-    if (r & 1) {
-      if (_relays[ri]->isOff()) {relayOn(ri); return;}
-    }
-  for (int ri = 0; r > 0; ri++, r=r>>1)
-    if (r & 1) {
-      if (_relays[ri]->isOn()) {relayOff(ri); return;}
-    }
+  if (!r) return;//no relays in group
+  //what is the state of last relay in group?
+  int ri_last = 0;
+  for (uint16_t bits = r; bits > 1; bits >>= 1) ri_last++;
+  if (_relays[ri_last]->isOff()){
+    //process switching on relays
+    for (int ri = 0; r > 0; ri++, r=r>>1)
+      if (r & 1) {
+        if (_relays[ri]->isOff()) {relayOn(ri); return;}
+      }
+  } else {
+    //process switcing off
+    for (int ri = 0; r > 0; ri++, r=r>>1)
+      if (r & 1) {
+        if (_relays[ri]->isOn()) {relayOff(ri); return;}
+      }
+  }
 }
 
 void ARelayArr::relaySetStatusAll(uint16_t states) {

@@ -82,7 +82,7 @@ bool fbStoreSensorData(void){
   return true;
 }
 
-void fbClearCommand(void) {
+void fbClearCommandFlags(void) {
   fbCommandRefreshReceived = false;
   fbCommandResetReceived = false;
   fbCommandSaveConfigReceived = false;
@@ -90,12 +90,29 @@ void fbClearCommand(void) {
   fbCommandSaveSchedulesReceived = false;
   fbCommandLoadSchedulesReceived = false;
   fbCommandSetReceived = false;
-  
+}
+
+void fbClearCommand(void) {
+  fbClearCommandFlags();
+
   if (Firebase.ready()) {
     String timePath =  getTimeAsPath(); // yyyy/mm/dd/hh/nn or empty is error
     Serial.printf("Clear reresh command ... %s\n", Firebase.setString(fbdo, String("/commands/" + mac).c_str(), String("Done " + timePath).c_str()) ? "ok" : fbdo.errorReason().c_str());
   }
-  
+}
+
+void fbFailCommand(const String &reason) {
+  fbClearCommandFlags();
+
+  if (Firebase.ready()) {
+    Serial.printf("Command error ... %s\n", Firebase.setString(fbdo, String("/commands/" + mac).c_str(), String("Error " + reason).c_str()) ? "ok" : fbdo.errorReason().c_str());
+  }
+}
+
+void fbWriteScheduleStatus(const String &status) {
+  if (!Firebase.ready()) return;
+  String path = "/sensors/" + deviceId + "/scheduleStatus";
+  Serial.printf("Schedule status to %s... %s\n", path.c_str(), Firebase.setString(fbdo, path.c_str(), status.c_str()) ? "ok" : fbdo.errorReason().c_str());
 }
 
 void firebaseStreamCallback(StreamData data) {
@@ -183,11 +200,15 @@ void initFirebase(void){
   config.max_token_generation_retry = 5;
   // Initialize the library with the Firebase authen and config 
   Firebase.begin(&config, &auth);
+  //create path for commands listener before
+  if (Firebase.ready()) {
+    Serial.printf("Initializing command path... %s\n", Firebase.setString(fbdo, String("/commands/" + mac).c_str(), "Initializing commands") ? "ok" : fbdo.errorReason().c_str());
+  }
   //listener on data change
   Serial.printf("Creating listener for %s\n", mac.c_str());
-  if (!Firebase.RTDB.beginStream(&stream, "/commands/" + mac))
+  if (!Firebase.beginStream(stream, "/commands/" + mac))
     Serial.printf("Firebase listen sream begin error, %s\n\n", stream.errorReason().c_str());
-  Firebase.RTDB.setStreamCallback(&stream, firebaseStreamCallback, firebaseStreamTimeoutCallback);
+  Firebase.setStreamCallback(stream, firebaseStreamCallback, firebaseStreamTimeoutCallback);
 }
 
 void saveConfigToFirebase(void) {
@@ -204,8 +225,19 @@ void loadConfigFromFirebase(void) {
   String currentPath = "/sensors/" + deviceId + "/config";
 
   bool res = Firebase.getJSON(fbdo, currentPath.c_str());
-  Serial.printf("Load config from %s... %s\n", currentPath.c_str(), res ? "ok" : fbdo.errorReason().c_str());
-  if (res) readDeviceConfig(fbdo.to<String>());
+  // to<String>() is empty for a JSON node; the body is in payload().
+  String payload = res ? fbdo.payload() : String();
+  String reason = res ? String() : fbdo.errorReason();
+  Serial.printf("Load config from %s... %s\n", currentPath.c_str(), res ? "ok" : reason.c_str());
+  if (!res) {
+    fbFailCommand(reason);
+    return;
+  }
+  payload.trim();
+  if (!payload.length() || !readDeviceConfig(payload)) {
+    fbFailCommand(payload.length() ? "bad config" : "empty payload");
+    return;
+  }
 
   fbClearCommand();
 }
@@ -224,9 +256,30 @@ void loadSchedulesFromFirebase(void) {
   String currentPath = "/sensors/" + deviceId + "/schedules";
 
   bool res = Firebase.getJSON(fbdo, currentPath.c_str());
-  Serial.printf("Load schedules from %s... %s\n", currentPath.c_str(), res ? "ok" : fbdo.errorReason().c_str());
-  if (res) readSchedulesConfig(fbdo.to<String>());
+  String payload = res ? fbdo.payload() : String();
+  String reason = res ? String() : fbdo.errorReason();
+  Serial.printf("Load schedules from %s... %s\n", currentPath.c_str(), res ? "ok" : reason.c_str());
+  if (!res) {
+    fbWriteScheduleStatus(reason);
+    fbFailCommand(reason);
+    return;
+  }
+  payload.trim();
+  if (!payload.length()) {
+    fbWriteScheduleStatus("empty payload");
+    fbFailCommand("empty payload");
+    return;
+  }
 
+  String error;
+  if (!readSchedulesConfig(payload, &error)) {
+    if (!error.length()) error = "bad schedule";
+    fbWriteScheduleStatus(error);
+    fbFailCommand(error);
+    return;
+  }
+
+  fbWriteScheduleStatus(String(schedules.getLength()));
   fbClearCommand();
 }
 

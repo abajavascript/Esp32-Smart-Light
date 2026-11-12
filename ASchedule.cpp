@@ -64,18 +64,37 @@ boolean ASchedule::isTimeElapsed(time_t t) {
   return false;
 }
 
+static bool calendarAdvanced(time_t prev, time_t now) {
+  if (year(prev) != year(now)) return year(prev) < year(now);
+  if (month(prev) != month(now)) return month(prev) < month(now);
+  return day(prev) < day(now);
+}
+
 boolean ASchedule::process() {
   Serial.println("Processing schedule : " + _description);
   t_now = getNow();
+  // getNow() is 0 until NTP has synced this session. Leave the edge unarmed.
   if (year(t_now) < 2020) return false;
-  if (!(year(t_prev) < year(t_now) || month(t_prev) < month(t_now) || day(t_prev) < day(t_now) || isTimeElapsed(t_prev)) && isTimeElapsed(t_now)) {
-    t_prev = t_now;
-    return doAction();
-    // return true;
-  } else {
+
+  // Boot, reload, or the first valid clock only remembers "now", so noon does
+  // not replay a morning schedule.
+  if (t_prev == 0 || year(t_prev) < 2020) {
     t_prev = t_now;
     return false;
   }
+
+  bool fire = false;
+  if (calendarAdvanced(t_prev, t_now)) {
+    // 00:00 is already elapsed for the whole previous day, so the same-day
+    // rising edge never comes. The midnight minute is that edge.
+    if (hour(t_now) == 0 && minute(t_now) == 0 && isTimeElapsed(t_now)) fire = true;
+  } else if (!isTimeElapsed(t_prev) && isTimeElapsed(t_now)) {
+    fire = true;
+  }
+
+  t_prev = t_now;
+  if (!fire) return false;
+  return doAction();
 }
 
 boolean ASchedule::doAction(void){
@@ -131,7 +150,7 @@ int AScheduleArr::getLength() {
 boolean AScheduleArr::process() {
   bool relayStatusChanged = false;
   for (int i = 0; i < schedules.size(); i++) {
-    relayStatusChanged = relayStatusChanged || schedules.get(i)->process();
+    if (schedules.get(i)->process()) relayStatusChanged = true;
   }
   return relayStatusChanged;
 }
