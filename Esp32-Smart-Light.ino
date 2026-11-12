@@ -25,6 +25,10 @@ void setup() {
 
   readSchedulesConfig();
 
+  //Buttons live from the timer ISR. Start it before WiFiManager: a missing
+  //router holds setup() on the config portal for up to 180 s.
+  initTimerInterrupt();
+
   initWiFi();  
   //to force WiFi reconnect in loop, because router has 2-3 min to startup (after 3 minutes)
   reconnectWiFiMillis = millis() - RECONNECT_WIFI_INTERVAL * 1000 + 3 * 60 * 1000;
@@ -36,8 +40,6 @@ void setup() {
   //to force immediate execution (after 3 second)
   updateTiming = millis() - UPDATE_INTERVAL * 1000 + 3 * 1000;
   updateSchedulesTiming = millis() - UPDATE_SCHEDULES_INTERVAL * 1000 + 3 * 1000;
-
-  initTimerInterrupt();
 }
 
 void loop() {
