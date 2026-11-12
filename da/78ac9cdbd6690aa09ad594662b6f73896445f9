@@ -1,0 +1,61 @@
+ADeviceConfig.cpp
+  s_6d327ddad5e8d2::t_b3723b3a6137b5 280,282,290,292
+  s_6d327ddad5e8d2::t_c1090cb0690fc4 2
+  s_cb9b9f8a8e35fc::t_05630cc23223cb 67
+  s_6d327ddad5e8d2::t_b0ffc20fe2d328 196-279,281,283-289,291,293-325,331,333,335-341,343-345,347-349,351,353,356,358-363,366-368,370-371,374-375
+  s_6d327ddad5e8d2::t_3748c667af4502 112
+  s_6d327ddad5e8d2::t_d92ca8ccba10c2 90,373
+  s_cb9b9f8a8e35fc::t_40fc10d8fe64ab 40
+  s_cb9b9f8a8e35fc::t_6c3e2ed42bcf07 31
+  s_cb9b9f8a8e35fc::t_a1f1e309346aef 76
+  s_cb9b9f8a8e35fc::t_80de868d63956e 58
+  s_cb9b9f8a8e35fc::t_4e205cd6c9a906 49
+AFirebase.h
+  s_6d327ddad5e8d2::t_e8a444695852e8 228-240
+  s_cb9b9f8a8e35fc::t_c1ea2b49ef2de0 203-206,209,211
+  s_6d327ddad5e8d2::t_2e82cabe9288d2 85,93-97,102-115,273
+  s_6d327ddad5e8d2::t_9aded539645039 259-272,274-280,282
+AWiFi.h
+  s_cb9b9f8a8e35fc::t_f49cbcc39a61de 15,17-19
+AWiFi.cpp
+  s_cb9b9f8a8e35fc::t_5554b14a904117 1-58
+Esp32-Smart-Light.ino
+  s_cb9b9f8a8e35fc::t_f47f20d3431f04 48-53
+AParseJSON.h
+  s_6d327ddad5e8d2::t_8e6a36bb038795 1-8,10-14
+  s_6d327ddad5e8d2::t_8428c2b86a9df5 9
+ARelay.cpp
+  s_cb9b9f8a8e35fc::t_aa420d2921cf77 166-182
+ADeviceConfig.h
+  s_6d327ddad5e8d2::t_5495e759639e87 8-10
+ASchedule.cpp
+  s_6d327ddad5e8d2::t_45b2b7f7e27623 153
+  s_6d327ddad5e8d2::t_4b9e335182a5a7 67-72,76,78-81,85-97
+AParseJSON.cpp
+  s_6d327ddad5e8d2::t_71ca7bbf6f35f8 3
+  s_6d327ddad5e8d2::t_fa5dc613735ca1 1-2,4-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "da78ac9cdbd6690aa09ad594662b6f73896445f9",
+  "prompts": {},
+  "sessions": {
+    "s_6d327ddad5e8d2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "472f875e-60f8-4641-bffe-bda88c43e97d",
+        "model": "auto-smart"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>"
+    },
+    "s_cb9b9f8a8e35fc": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5a3cb01d-4de3-4f10-afa1-7b598f33a3cc",
+        "model": "auto-smart"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>"
+    }
+  }
+}
